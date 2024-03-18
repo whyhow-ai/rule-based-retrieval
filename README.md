@@ -228,4 +228,6 @@ If you'd like to contribute code, please follow these steps:
 This project is licensed under the MIT License.
 
 ### Support
-If you have any questions or need assistance, please contact us at team@whyhow.ai. We're here to help!
+WhyHow.AI is building tools to help developers bring more determinism and control to their RAG pipelines using graph structures. If you're thinking about, in the process of, or have already incorporated knowledge graphs in RAG, we’d love to chat at team@whyhow.ai, or follow our newsletter at WhyHow.AI. Join our discussions about rules, determinism and knowledge graphs in RAG on our newly-created Discord.
+
+Check out the code on our github, and install the package using pip.
