@@ -3,6 +3,9 @@
 [![Python Version](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-MIT-green)](https://opensource.org/licenses/MIT)
 [![PyPI Version](https://img.shields.io/pypi/v/rule-based-retrieval)](https://pypi.org/project/rule-based-retrieval/)
+[![Code Style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Checked with mypy](https://img.shields.io/badge/mypy-checked-blue)](https://mypy-lang.org/)
+[![Whyhow Discord](https://dcbadge.vercel.app/api/server/PAgGMxfhKd?compact=true&style=flat)](https://discord.gg/PAgGMxfhKd)
 
 The Rule-based Retrieval package is a Python package that enables you to create and manage Retrieval Augmented Generation (RAG) applications with advanced filtering capabilities. It seamlessly integrates with OpenAI for text generation and Pinecone for efficient vector database management.
 
