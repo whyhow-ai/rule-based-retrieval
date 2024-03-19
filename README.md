@@ -82,6 +82,7 @@ Navigate to http://127.0.0.1:8000/ in your browser to view the documentation.
 Check out the `examples/` directory for sample scripts demonstrating how to use the Rule-based Retrieval package.
 
 # How to
+### [Demo](https://www.loom.com/share/089101b455b34701875b9f362ba16b89)
 
 ## Create index & upload
 
