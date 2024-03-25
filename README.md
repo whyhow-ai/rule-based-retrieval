@@ -182,7 +182,7 @@ print(result["matches"])
 print(result["used_contexts"])
 ```
 
-## Query each rule seperately
+## Query each rule separately
 
 ```shell
 from whyhow import Client, Rule
