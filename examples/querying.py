@@ -2,7 +2,7 @@
 
 import logging
 
-from whyhow import Client, Rule
+from whyhow_rbr import Client, Rule
 
 # Parameters
 index_name = ""  # Replace with your index name
@@ -18,7 +18,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger("querying")
 logger.setLevel(logging_level)
-logging.getLogger("whyhow").setLevel(logging_level)
+logging.getLogger("whyhow_rbr").setLevel(logging_level)
 
 
 # Define OPENAI_API_KEY and PINECONE_API_KEY as environment variables

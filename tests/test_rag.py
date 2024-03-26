@@ -7,12 +7,12 @@ from openai import OpenAI
 from openai.types.chat.chat_completion import ChatCompletion
 from pinecone import Index, NotFoundException, Pinecone
 
-from whyhow.exceptions import (
+from whyhow_rbr.exceptions import (
     IndexAlreadyExistsException,
     IndexNotFoundException,
     OpenAIException,
 )
-from whyhow.rag import Client, Output, PineconeDocument, PineconeMetadata, Rule
+from whyhow_rbr.rag import Client, Output, PineconeDocument, PineconeMetadata, Rule
 
 
 class TestRule:
@@ -106,8 +106,8 @@ def patched_client(monkeypatch):
     fake_openai_instance = Mock(spec=OpenAI)
     fake_openai_class = Mock(return_value=fake_openai_instance)
 
-    monkeypatch.setattr("whyhow.rag.Pinecone", fake_pinecone_class)
-    monkeypatch.setattr("whyhow.rag.OpenAI", fake_openai_class)
+    monkeypatch.setattr("whyhow_rbr.rag.Pinecone", fake_pinecone_class)
+    monkeypatch.setattr("whyhow_rbr.rag.OpenAI", fake_openai_class)
 
     client = Client()
 
@@ -142,8 +142,8 @@ class TestClient:
         fake_openai_instance = Mock(spec=OpenAI)
         fake_openai_class = Mock(return_value=fake_openai_instance)
 
-        monkeypatch.setattr("whyhow.rag.Pinecone", fake_pinecone_class)
-        monkeypatch.setattr("whyhow.rag.OpenAI", fake_openai_class)
+        monkeypatch.setattr("whyhow_rbr.rag.Pinecone", fake_pinecone_class)
+        monkeypatch.setattr("whyhow_rbr.rag.OpenAI", fake_openai_class)
 
         client = Client()
 
@@ -248,10 +248,10 @@ class TestClient:
         fake_clean_chunks = Mock(return_value=parsed_docs)
         fake_generate_embeddings = Mock(return_value=6 * [[2.2, 0.6]])
 
-        monkeypatch.setattr("whyhow.rag.parse_and_split", fake_parse_and_split)
-        monkeypatch.setattr("whyhow.rag.clean_chunks", fake_clean_chunks)
+        monkeypatch.setattr("whyhow_rbr.rag.parse_and_split", fake_parse_and_split)
+        monkeypatch.setattr("whyhow_rbr.rag.clean_chunks", fake_clean_chunks)
         monkeypatch.setattr(
-            "whyhow.rag.generate_embeddings", fake_generate_embeddings
+            "whyhow_rbr.rag.generate_embeddings", fake_generate_embeddings
         )
 
         client.upload_documents(
@@ -309,10 +309,10 @@ class TestClient:
         fake_clean_chunks = Mock(return_value=parsed_docs)
         fake_generate_embeddings = Mock(return_value=5 * [[2.2, 0.6]])
 
-        monkeypatch.setattr("whyhow.rag.parse_and_split", fake_parse_and_split)
-        monkeypatch.setattr("whyhow.rag.clean_chunks", fake_clean_chunks)
+        monkeypatch.setattr("whyhow_rbr.rag.parse_and_split", fake_parse_and_split)
+        monkeypatch.setattr("whyhow_rbr.rag.clean_chunks", fake_clean_chunks)
         monkeypatch.setattr(
-            "whyhow.rag.generate_embeddings", fake_generate_embeddings
+            "whyhow_rbr.rag.generate_embeddings", fake_generate_embeddings
         )
 
         with pytest.raises(
@@ -398,7 +398,7 @@ class TestClient:
 
         monkeypatch.setattr(client, "get_index", Mock(return_value=fake_index))
         monkeypatch.setattr(
-            "whyhow.rag.generate_embeddings", fake_generate_embeddings
+            "whyhow_rbr.rag.generate_embeddings", fake_generate_embeddings
         )
 
         final_result = client.query(
@@ -513,7 +513,7 @@ class TestClient:
 
         monkeypatch.setattr(client, "get_index", Mock(return_value=fake_index))
         monkeypatch.setattr(
-            "whyhow.rag.generate_embeddings", fake_generate_embeddings
+            "whyhow_rbr.rag.generate_embeddings", fake_generate_embeddings
         )
 
         final_result = client.query(
@@ -633,7 +633,7 @@ class TestClient:
 
         monkeypatch.setattr(client, "get_index", Mock(return_value=fake_index))
         monkeypatch.setattr(
-            "whyhow.rag.generate_embeddings", fake_generate_embeddings
+            "whyhow_rbr.rag.generate_embeddings", fake_generate_embeddings
         )
 
         _ = client.query(
@@ -724,7 +724,7 @@ class TestClient:
 
         monkeypatch.setattr(client, "get_index", Mock(return_value=fake_index))
         monkeypatch.setattr(
-            "whyhow.rag.generate_embeddings", fake_generate_embeddings
+            "whyhow_rbr.rag.generate_embeddings", fake_generate_embeddings
         )
 
         with pytest.raises(OpenAIException, match="OpenAI did not return"):
@@ -796,7 +796,7 @@ class TestClient:
 
         monkeypatch.setattr(client, "get_index", Mock(return_value=fake_index))
         monkeypatch.setattr(
-            "whyhow.rag.generate_embeddings", fake_generate_embeddings
+            "whyhow_rbr.rag.generate_embeddings", fake_generate_embeddings
         )
 
         with pytest.raises(OpenAIException, match="Chat did not finish"):

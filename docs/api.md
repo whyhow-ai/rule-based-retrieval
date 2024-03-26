@@ -1,27 +1,41 @@
 # Reference
 
 ## `whyhow.embedding` module
-### ::: whyhow.embedding.generate_embeddings
+
+### ::: whyhow_rbr.embedding.generate_embeddings
 
 ## `whyhow.exceptions` module
-### ::: whyhow.exceptions.IndexAlreadyExistsException
-### ::: whyhow.exceptions.IndexNotFoundException
-### ::: whyhow.exceptions.OpenAIException
+
+### ::: whyhow_rbr.exceptions.IndexAlreadyExistsException
+
+### ::: whyhow_rbr.exceptions.IndexNotFoundException
+
+### ::: whyhow_rbr.exceptions.OpenAIException
 
 ## `whyhow.processing` module
-### ::: whyhow.processing.parse_and_split
-### ::: whyhow.processing.clean_chunks
+
+### ::: whyhow_rbr.processing.parse_and_split
+
+### ::: whyhow_rbr.processing.clean_chunks
 
 ## `whyhow.rag` module
-### ::: whyhow.rag.Client
-### ::: whyhow.rag.Rule
-### ::: whyhow.rag.PineconeMetadata
-### ::: whyhow.rag.PineconeDocument
-### ::: whyhow.rag.PineconeMatch
-### ::: whyhow.rag.Input
-### ::: whyhow.rag.Output
 
-#### ::: whyhow.rag.Client.query
+### ::: whyhow_rbr.rag.Client
+
+### ::: whyhow_rbr.rag.Rule
+
+### ::: whyhow_rbr.rag.PineconeMetadata
+
+### ::: whyhow_rbr.rag.PineconeDocument
+
+### ::: whyhow_rbr.rag.PineconeMatch
+
+### ::: whyhow_rbr.rag.Input
+
+### ::: whyhow_rbr.rag.Output
+
+#### ::: whyhow_rbr.rag.Client.query
+
     :docstring:
     :members:
     :undoc-members:

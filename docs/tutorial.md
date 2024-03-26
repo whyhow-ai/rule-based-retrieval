@@ -1,6 +1,6 @@
 # Tutorial
 
-The `whyhow` package helps create customized RAG pipelines. It is built on top
+The `whyhow_rbr` package helps create customized RAG pipelines. It is built on top
 of the following technologies (and their respective Python SDKs)
 
 - **OpenAI** - text generation
@@ -27,7 +27,7 @@ export PINECONE_API_KEY...
 and then instantiate the client without any arguments.
 
 ```python title="getting_started.py"
-from whyhow import Client
+from whyhow_rbr import Client
 
 client = Client()
 
@@ -41,7 +41,7 @@ An alternative approach is to manually pass the keys when the client is
 being constructed
 
 ```python title="getting_started.py"
-from whyhow import Client
+from whyhow_rbr import Client
 
 client = Client(
     openai_api_key="...",
@@ -56,7 +56,7 @@ python getting_started.py
 
 ## Vector database operations
 
-`whywow` uses Pinecone for everything related to vector databses.
+`whyhow_rbr` uses Pinecone for everything related to vector databses.
 
 ### Creating an index
 
@@ -96,7 +96,7 @@ index = client.create_index(
     ```python
     from pinecone import ServerlessSpec
 
-    from whyhow import Client
+    from whyhow_rbr import Client
 
     client = Client()
 
@@ -140,7 +140,7 @@ index = client.create_index(
     ```python
     from pinecone import PodSpec
 
-    from whyhow import Client
+    from whyhow_rbr import Client
 
     client = Client()
 
@@ -177,7 +177,7 @@ index = client.get_index("amazing-index")
     ```python
     from pinecone import PodSpec
 
-    from whyhow import Client
+    from whyhow_rbr import Client
 
     client = Client()
 
@@ -235,7 +235,7 @@ Example output:
 ## Uploading documents
 
 After creating an index, we are ready to populate it with documents. In
-`whyhow` this is done using the `upload_documents` method of the `Client`.
+`whyhow_rbr` this is done using the `upload_documents` method of the `Client`.
 It performs the following steps under the hood:
 
 - **Preprocessing**: Reading and splitting the provided PDF files into chunks
@@ -261,7 +261,7 @@ client.upload_documents(
 ??? note "Full code"
 
     ```python
-    from whyhow import Client
+    from whyhow_rbr import Client
 
     client = Client()
 
@@ -302,7 +302,7 @@ client.upload_documents(
     )
     ```
     Note that the above affects the root logger, however, you can also
-    just customize the `whyhow` logger.
+    just customize the `whyhow_rbr` logger.
 
 Navigate to [upload_documents (API docs)](./api.md#whyhow.rag.Client.upload_documents)
 if you want to get more information on the parameters.
@@ -311,7 +311,7 @@ if you want to get more information on the parameters.
 
 While Pinecone does not require each document in an index to have the same schema
 all the document uploaded via the `upload_documents` will have a fixed schema.
-This schema is defined in [PineconeDocument (API docs)](./api.md#whyhow.rag.PineconeDocument).
+This schema is defined in [PineconeDocument (API docs)](./api.md#whyhow_rbr.rag.PineconeDocument).
 This is done in order to have a predictable set of attributes that
 can be used to perform advanced filtering (via rules).
 
@@ -320,13 +320,13 @@ can be used to perform advanced filtering (via rules).
 In previous sections we discussed how to to create an index and
 populate it with documents. Now we can finally move to retrieval augmented generation.
 
-In `whyhow`, it can be done via the `query` method.
+In `whyhow_rbr`, it can be done via the `query` method.
 
 1. Simple example:
 
 ```python
 
-from whyhow import Client, Rule
+from whyhow_rbr import Client, Rule
 
 client = Client()
 
@@ -394,7 +394,7 @@ print(result["matches"])
 
 Note that the number of matches will be in general equal to `top_k` which
 can be specified as a parameter. Also, each match has a fixed schema -
-it is a dump of [PineconeMatch (API docs)](./api.md#whyhow.rag.PineconeMatch).
+it is a dump of [PineconeMatch (API docs)](./api.md#whyhow_rbr.rag.PineconeMatch).
 
 ```python
 print(result["used_contexts"])
@@ -409,7 +409,7 @@ The OpenAI model only used the context from the 1st match when answering the que
 ??? note "Full code"
 
     ```python
-    from whyhow import Client
+    from whyhow_rbr import Client
 
     client = Client()
 
@@ -431,14 +431,14 @@ The OpenAI model only used the context from the 1st match when answering the que
 
     ```
 
-Navigate to [query(API docs)](./api.md#whyhow.rag.Client.query)
+Navigate to [query(API docs)](./api.md#whyhow_rbr.rag.Client.query)
 if you want to get more information on the parameters.
 
 ### Rules
 
 In the previous example, every single document in our index was considered.
 However, sometimes it might be beneficial to only retrieve documents satisfying some
-predefined conditions (e.g. `filename=harry-potter.pdf`). In `whyhow` this
+predefined conditions (e.g. `filename=harry-potter.pdf`). In `whyhow_rbr` this
 can be done via the `Rule` class.
 
 A rule can control the following metadata attributes
@@ -453,7 +453,7 @@ A rule can control the following metadata attributes
 ```python
 # Code above omitted 👆
 
-from whyhow import Rule
+from whyhow_rbr import Rule
 
 question = "What is Harry Potter's favourite food?"
 
@@ -477,7 +477,7 @@ In this example, the keyword_trigger parameter is set to True, and the rule incl
 ??? note "Full code"
 
     ```python
-    from whyhow import Client, Rule
+    from whyhow_rbr import Client, Rule
 
     client = Client()
 
@@ -512,7 +512,7 @@ will be evaluated using the `OR` logical operator.
 ```python
 # Code above omitted 👆
 
-from whyhow import Rule
+from whyhow_rbr import Rule
 
 question = "What is Harry Potter's favorite food?"
 
@@ -545,7 +545,7 @@ Depending on the number of rules you use in your query, you may return more chun
 ??? note "Full code"
 
     ```python
-    from whyhow import Client, Rule
+    from whyhow_rbr import Client, Rule
 
     client = Client()
 
@@ -577,5 +577,5 @@ Depending on the number of rules you use in your query, you may return more chun
     print(result["used_contexts"])
     ```
 
-Navigate to [Rule (API docs)](./api.md#whyhow.rag.Rule)
+Navigate to [Rule (API docs)](./api.md#whyhow_rbr.rag.Rule)
 if you want to get more information on the parameters.

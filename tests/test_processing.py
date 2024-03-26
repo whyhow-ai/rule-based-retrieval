@@ -6,7 +6,7 @@ import pytest
 from fpdf import FPDF
 from langchain_core.documents import Document
 
-from whyhow.processing import clean_chunks, parse_and_split
+from whyhow_rbr.processing import clean_chunks, parse_and_split
 
 
 @pytest.fixture

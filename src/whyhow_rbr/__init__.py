@@ -1,12 +1,12 @@
 """SDK."""
 
-from whyhow.exceptions import (
+from whyhow_rbr.exceptions import (
     IndexAlreadyExistsException,
     IndexNotFoundException,
 )
-from whyhow.rag import Client, Rule
+from whyhow_rbr.rag import Client, Rule
 
-__version__ = "v0.1.2"
+__version__ = "v0.1.3"
 __all__ = [
     "Client",
     "IndexAlreadyExistsException",

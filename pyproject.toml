@@ -64,7 +64,7 @@ namespaces = false
 "*" = ["*.txt", "*.rst", "*.typed"]
 
 [tool.setuptools.dynamic]
-version = {attr = "whyhow.__version__"}
+version = {attr = "whyhow_rbr.__version__"}
 
 [tool.pydocstyle]
 convention = "numpy"
