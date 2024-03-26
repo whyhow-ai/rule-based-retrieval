@@ -41,7 +41,8 @@ export OPENAI_API_KEY=<your open ai api key>
 export PINECONE_API_KEY=<your pinecone api key>
 ```
 
-### Developer Install 
+### Developer Install
+
 For a developer installation, use an editable install and include the development dependencies:
 
 ```shell
@@ -49,6 +50,7 @@ pip install -e .[dev]
 ```
 
 For ZSH:
+
 ```shell
 pip install -e ".[dev]"
 ```
@@ -59,7 +61,6 @@ run
 ```shell
 pip install git+ssh://git@github.com/whyhow-ai/rule-based-retrieval
 ```
-
 
 # Documentation
 
@@ -73,6 +74,7 @@ mkdocs serve
 ```
 
 For ZSH:
+
 ```shell
 pip install -e ".[docs]"
 mkdocs serve
@@ -85,12 +87,13 @@ Navigate to http://127.0.0.1:8000/ in your browser to view the documentation.
 Check out the `examples/` directory for sample scripts demonstrating how to use the Rule-based Retrieval package.
 
 # How to
+
 ### [Demo](https://www.loom.com/share/089101b455b34701875b9f362ba16b89)
 
 ## Create index & upload
 
 ```shell
-from whyhow import Client
+from whyhow_rbr import Client
 
 # Configure parameters
 index_name = "whyhow-demo"
@@ -110,7 +113,7 @@ client.upload_documents(index=index, documents=pdfs, namespace=namespace)
 ## Query with rules
 
 ```shell
-from whyhow import Client, Rule
+from whyhow_rbr import Client, Rule
 
 # Configure query parameters
 index_name = "whyhow-demo"
@@ -154,8 +157,8 @@ print(
 
 ## Query with keywords
 
-```shell 
-from whyhow import Client, Rule
+```shell
+from whyhow_rbr import Client, Rule
 
 client = Client()
 
@@ -185,7 +188,7 @@ print(result["used_contexts"])
 ## Query each rule separately
 
 ```shell
-from whyhow import Client, Rule
+from whyhow_rbr import Client, Rule
 
 client = Client()
 
@@ -218,6 +221,7 @@ print(result["used_contexts"])
 ```
 
 # Contributing
+
 We welcome contributions to improve the Rule-based Retrieval package! If you have any ideas, bug reports, or feature requests, please open an issue on the GitHub repository.
 
 If you'd like to contribute code, please follow these steps:
@@ -229,7 +233,9 @@ If you'd like to contribute code, please follow these steps:
 5. Open a pull request to the main repository
 
 ### License
+
 This project is licensed under the MIT License.
 
 ### Support
+
 WhyHow.AI is building tools to help developers bring more determinism and control to their RAG pipelines using graph structures. If you're thinking about, in the process of, or have already incorporated knowledge graphs in RAG, we’d love to chat at team@whyhow.ai, or follow our newsletter at [WhyHow.AI](https://www.whyhow.ai/). Join our discussions about rules, determinism and knowledge graphs in RAG on our newly-created [Discord](https://discord.com/invite/9bWqrsxgHr).

@@ -4,7 +4,7 @@ import logging
 
 from pinecone import PodSpec
 
-from whyhow import Client, IndexNotFoundException
+from whyhow_rbr import Client, IndexNotFoundException
 
 # Parameters
 index_name = ""  # Replace with your index name

@@ -24,13 +24,13 @@ from pydantic import (
     model_validator,
 )
 
-from whyhow.embedding import generate_embeddings
-from whyhow.exceptions import (
+from whyhow_rbr.embedding import generate_embeddings
+from whyhow_rbr.exceptions import (
     IndexAlreadyExistsException,
     IndexNotFoundException,
     OpenAIException,
 )
-from whyhow.processing import clean_chunks, parse_and_split
+from whyhow_rbr.processing import clean_chunks, parse_and_split
 
 logger = logging.getLogger(__name__)
 

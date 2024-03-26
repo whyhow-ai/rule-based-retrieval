@@ -5,7 +5,7 @@ from unittest.mock import Mock
 import pytest
 from langchain_openai import OpenAIEmbeddings
 
-from whyhow.embedding import generate_embeddings
+from whyhow_rbr.embedding import generate_embeddings
 
 
 @pytest.mark.parametrize("model", ["whatever", "else"])
@@ -16,7 +16,7 @@ def test_generate_embeddings(monkeypatch, model):
     fake_inst.embed_documents.side_effect = lambda x: [[2.2, 5.5] for _ in x]
     fake_class = Mock(return_value=fake_inst)
 
-    monkeypatch.setattr("whyhow.embedding.OpenAIEmbeddings", fake_class)
+    monkeypatch.setattr("whyhow_rbr.embedding.OpenAIEmbeddings", fake_class)
     embeddings = generate_embeddings(
         chunks=chunks, openai_api_key="test", model=model
     )
