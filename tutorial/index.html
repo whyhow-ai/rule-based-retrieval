@@ -556,7 +556,7 @@
 
 
 <h1 id="tutorial">Tutorial<a class="headerlink" href="#tutorial" title="Permanent link">&para;</a></h1>
-<p>The <code>whyhow</code> package helps create customized RAG pipelines. It is built on top
+<p>The <code>whyhow_rbr</code> package helps create customized RAG pipelines. It is built on top
 of the following technologies (and their respective Python SDKs)</p>
 <ul>
 <li><strong>OpenAI</strong> - text generation</li>
@@ -576,7 +576,7 @@ API keys:</p>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">export</span><span class="w"> </span>PINECONE_API_KEY...
 </span></code></pre></div>
 <p>and then instantiate the client without any arguments.</p>
-<div class="language-python highlight"><span class="filename">getting_started.py</span><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span> <span class="nn">whyhow</span> <span class="kn">import</span> <span class="n">Client</span>
+<div class="language-python highlight"><span class="filename">getting_started.py</span><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span> <span class="nn">whyhow_rbr</span> <span class="kn">import</span> <span class="n">Client</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
 </span></code></pre></div>
@@ -584,7 +584,7 @@ API keys:</p>
 </span></code></pre></div>
 <p>An alternative approach is to manually pass the keys when the client is
 being constructed</p>
-<div class="language-python highlight"><span class="filename">getting_started.py</span><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span> <span class="nn">whyhow</span> <span class="kn">import</span> <span class="n">Client</span>
+<div class="language-python highlight"><span class="filename">getting_started.py</span><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span> <span class="nn">whyhow_rbr</span> <span class="kn">import</span> <span class="n">Client</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span>
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">openai_api_key</span><span class="o">=</span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
@@ -595,7 +595,7 @@ being constructed</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>python<span class="w"> </span>getting_started.py
 </span></code></pre></div>
 <h2 id="vector-database-operations">Vector database operations<a class="headerlink" href="#vector-database-operations" title="Permanent link">&para;</a></h2>
-<p><code>whywow</code> uses Pinecone for everything related to vector databses.</p>
+<p><code>whyhow_rbr</code> uses Pinecone for everything related to vector databses.</p>
 <h3 id="creating-an-index">Creating an index<a class="headerlink" href="#creating-an-index" title="Permanent link">&para;</a></h3>
 <p>If you don't have a Pinecone index yet, you can create it using the
 <code>create_index</code> method of the <code>Client</code>. This method
@@ -627,7 +627,7 @@ is a thin wrapper around the Pinecone SDK (<a href="https://docs.pinecone.io/doc
 <summary>Full code</summary>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span> <span class="nn">pinecone</span> <span class="kn">import</span> <span class="n">ServerlessSpec</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="kn">from</span> <span class="nn">whyhow</span> <span class="kn">import</span> <span class="n">Client</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="kn">from</span> <span class="nn">whyhow_rbr</span> <span class="kn">import</span> <span class="n">Client</span>
 </span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
 </span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
 </span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
@@ -665,7 +665,7 @@ is a thin wrapper around the Pinecone SDK (<a href="https://docs.pinecone.io/doc
 <summary>Full code</summary>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">from</span> <span class="nn">pinecone</span> <span class="kn">import</span> <span class="n">PodSpec</span>
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="kn">from</span> <span class="nn">whyhow</span> <span class="kn">import</span> <span class="n">Client</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="kn">from</span> <span class="nn">whyhow_rbr</span> <span class="kn">import</span> <span class="n">Client</span>
 </span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
 </span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
 </span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
@@ -696,7 +696,7 @@ please refer to <a href="https://docs.pinecone.io/docs/indexes">(Pinecone) Under
 <summary>Full code</summary>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">from</span> <span class="nn">pinecone</span> <span class="kn">import</span> <span class="n">PodSpec</span>
 </span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="kn">from</span> <span class="nn">whyhow</span> <span class="kn">import</span> <span class="n">Client</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="kn">from</span> <span class="nn">whyhow_rbr</span> <span class="kn">import</span> <span class="n">Client</span>
 </span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
 </span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
 </span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
@@ -732,7 +732,7 @@ It offers multiple convenience methods. See below a few examples.</p>
 <p><a href="https://docs.pinecone.io/docs/update-data">Update (Pinecone docs)</a></p>
 <h2 id="uploading-documents">Uploading documents<a class="headerlink" href="#uploading-documents" title="Permanent link">&para;</a></h2>
 <p>After creating an index, we are ready to populate it with documents. In
-<code>whyhow</code> this is done using the <code>upload_documents</code> method of the <code>Client</code>.
+<code>whyhow_rbr</code> this is done using the <code>upload_documents</code> method of the <code>Client</code>.
 It performs the following steps under the hood:</p>
 <ul>
 <li><strong>Preprocessing</strong>: Reading and splitting the provided PDF files into chunks</li>
@@ -753,7 +753,7 @@ It performs the following steps under the hood:</p>
 </span></code></pre></div>
 <details class="note">
 <summary>Full code</summary>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="kn">from</span> <span class="nn">whyhow</span> <span class="kn">import</span> <span class="n">Client</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="kn">from</span> <span class="nn">whyhow_rbr</span> <span class="kn">import</span> <span class="n">Client</span>
 </span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>
 </span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
 </span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
@@ -790,24 +790,24 @@ get some information about what is going on you can activate logging.</p>
 </span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="p">)</span>
 </span></code></pre></div>
 Note that the above affects the root logger, however, you can also
-just customize the <code>whyhow</code> logger.</p>
+just customize the <code>whyhow_rbr</code> logger.</p>
 </div>
 <p>Navigate to <a href="../api/#whyhow.rag.Client.upload_documents">upload_documents (API docs)</a>
 if you want to get more information on the parameters.</p>
 <h3 id="index-schema">Index schema<a class="headerlink" href="#index-schema" title="Permanent link">&para;</a></h3>
 <p>While Pinecone does not require each document in an index to have the same schema
 all the document uploaded via the <code>upload_documents</code> will have a fixed schema.
-This schema is defined in <a href="../api/#whyhow.rag.PineconeDocument">PineconeDocument (API docs)</a>.
+This schema is defined in <a href="../api/#whyhow_rbr.rag.PineconeDocument">PineconeDocument (API docs)</a>.
 This is done in order to have a predictable set of attributes that
 can be used to perform advanced filtering (via rules).</p>
 <h2 id="question-answering">Question answering<a class="headerlink" href="#question-answering" title="Permanent link">&para;</a></h2>
 <p>In previous sections we discussed how to to create an index and
 populate it with documents. Now we can finally move to retrieval augmented generation.</p>
-<p>In <code>whyhow</code>, it can be done via the <code>query</code> method.</p>
+<p>In <code>whyhow_rbr</code>, it can be done via the <code>query</code> method.</p>
 <ol>
 <li>Simple example:</li>
 </ol>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="kn">from</span> <span class="nn">whyhow</span> <span class="kn">import</span> <span class="n">Client</span><span class="p">,</span> <span class="n">Rule</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="kn">from</span> <span class="nn">whyhow_rbr</span> <span class="kn">import</span> <span class="n">Client</span><span class="p">,</span> <span class="n">Rule</span>
 </span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>
 </span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
 </span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
@@ -865,7 +865,7 @@ populate it with documents. Now we can finally move to retrieval augmented gener
 </span></code></pre></div>
 <p>Note that the number of matches will be in general equal to <code>top_k</code> which
 can be specified as a parameter. Also, each match has a fixed schema -
-it is a dump of <a href="../api/#whyhow.rag.PineconeMatch">PineconeMatch (API docs)</a>.</p>
+it is a dump of <a href="../api/#whyhow_rbr.rag.PineconeMatch">PineconeMatch (API docs)</a>.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;used_contexts&quot;</span><span class="p">])</span>
 </span></code></pre></div>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -873,7 +873,7 @@ it is a dump of <a href="../api/#whyhow.rag.PineconeMatch">PineconeMatch (API do
 <p>The OpenAI model only used the context from the 1st match when answering the question.</p>
 <details class="note">
 <summary>Full code</summary>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="kn">from</span> <span class="nn">whyhow</span> <span class="kn">import</span> <span class="n">Client</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="kn">from</span> <span class="nn">whyhow_rbr</span> <span class="kn">import</span> <span class="n">Client</span>
 </span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>
 </span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
 </span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>
@@ -894,12 +894,12 @@ it is a dump of <a href="../api/#whyhow.rag.PineconeMatch">PineconeMatch (API do
 </span><span id="__span-23-19"><a id="__codelineno-23-19" name="__codelineno-23-19" href="#__codelineno-23-19"></a><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;used_contexts&quot;</span><span class="p">])</span>
 </span></code></pre></div>
 </details>
-<p>Navigate to <a href="../api/#whyhow.rag.Client.query">query(API docs)</a>
+<p>Navigate to <a href="../api/#whyhow_rbr.rag.Client.query">query(API docs)</a>
 if you want to get more information on the parameters.</p>
 <h3 id="rules">Rules<a class="headerlink" href="#rules" title="Permanent link">&para;</a></h3>
 <p>In the previous example, every single document in our index was considered.
 However, sometimes it might be beneficial to only retrieve documents satisfying some
-predefined conditions (e.g. <code>filename=harry-potter.pdf</code>). In <code>whyhow</code> this
+predefined conditions (e.g. <code>filename=harry-potter.pdf</code>). In <code>whyhow_rbr</code> this
 can be done via the <code>Rule</code> class.</p>
 <p>A rule can control the following metadata attributes</p>
 <ul>
@@ -915,7 +915,7 @@ can be done via the <code>Rule</code> class.</p>
 </ul>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Code above omitted 👆</span>
 </span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>
-</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="kn">from</span> <span class="nn">whyhow</span> <span class="kn">import</span> <span class="n">Rule</span>
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="kn">from</span> <span class="nn">whyhow_rbr</span> <span class="kn">import</span> <span class="n">Rule</span>
 </span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>
 </span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="n">question</span> <span class="o">=</span> <span class="s2">&quot;What is Harry Potter&#39;s favourite food?&quot;</span>
 </span><span id="__span-24-6"><a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>
@@ -935,7 +935,7 @@ can be done via the <code>Rule</code> class.</p>
 <p>In this example, the keyword_trigger parameter is set to True, and the rule includes keywords. Only the rules whose keywords match the words in the question will be applied.</p>
 <details class="note">
 <summary>Full code</summary>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="kn">from</span> <span class="nn">whyhow</span> <span class="kn">import</span> <span class="n">Client</span><span class="p">,</span> <span class="n">Rule</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="kn">from</span> <span class="nn">whyhow_rbr</span> <span class="kn">import</span> <span class="n">Client</span><span class="p">,</span> <span class="n">Rule</span>
 </span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>
 </span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
 </span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>
@@ -969,7 +969,7 @@ can be done via the <code>Rule</code> class.</p>
 will be evaluated using the <code>OR</code> logical operator.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># Code above omitted 👆</span>
 </span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>
-</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="kn">from</span> <span class="nn">whyhow</span> <span class="kn">import</span> <span class="n">Rule</span>
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="kn">from</span> <span class="nn">whyhow_rbr</span> <span class="kn">import</span> <span class="n">Rule</span>
 </span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>
 </span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="n">question</span> <span class="o">=</span> <span class="s2">&quot;What is Harry Potter&#39;s favorite food?&quot;</span>
 </span><span id="__span-26-6"><a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>
@@ -996,7 +996,7 @@ will be evaluated using the <code>OR</code> logical operator.</p>
 <p>Depending on the number of rules you use in your query, you may return more chunks than your LLM’s context window can handle. Be mindful of your model’s token limits and adjust your top_k and rule count accordingly.</p>
 <details class="note">
 <summary>Full code</summary>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="kn">from</span> <span class="nn">whyhow</span> <span class="kn">import</span> <span class="n">Client</span><span class="p">,</span> <span class="n">Rule</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="kn">from</span> <span class="nn">whyhow_rbr</span> <span class="kn">import</span> <span class="n">Client</span><span class="p">,</span> <span class="n">Rule</span>
 </span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>
 </span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
 </span><span id="__span-27-4"><a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>
@@ -1028,7 +1028,7 @@ will be evaluated using the <code>OR</code> logical operator.</p>
 </span><span id="__span-27-30"><a id="__codelineno-27-30" name="__codelineno-27-30" href="#__codelineno-27-30"></a><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;used_contexts&quot;</span><span class="p">])</span>
 </span></code></pre></div>
 </details>
-<p>Navigate to <a href="../api/#whyhow.rag.Rule">Rule (API docs)</a>
+<p>Navigate to <a href="../api/#whyhow_rbr.rag.Rule">Rule (API docs)</a>
 if you want to get more information on the parameters.</p>
 
 
