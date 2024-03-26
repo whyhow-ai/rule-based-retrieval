@@ -31,4 +31,9 @@ except IndexNotFoundException:
     index = client.create_index(index_name, spec=spec)
     logger.info(f"Index {index_name} created")
 
-client.upload_documents(index=index, documents=pdfs, namespace=namespace)
+client.upload_documents(
+    index=index,
+    documents=pdfs,
+    namespace=namespace,
+    metadata_fields=["author", "subject", "keywords", "creation_date", "modification_date", "pages", "file_size", "pdf_version"]
+)

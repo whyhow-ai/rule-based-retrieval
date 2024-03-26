@@ -41,33 +41,69 @@ DEFAULT_SPEC = ServerlessSpec(cloud="aws", region="us-west-2")
 
 # Custom classes
 class PineconeMetadata(BaseModel, extra="forbid"):
-    """The metadata to be stored in Pinecone.
+    """
+    Represents the metadata to be stored in Pinecone, encapsulating details pertinent to a document.
+
+    This metadata class extends from BaseModel and is designed with strict field validation in mind, 
+    as indicated by the 'extra="forbid"' argument, which prohibits the setting of any fields that 
+    are not explicitly defined in the class.
 
     Attributes
     ----------
     text : str
-        The text of the document.
+        The textual content associated with the document.
 
     page_number : int
-        The page number of the document.
+        Indicates the specific page number within the document where the metadata is relevant.
 
     chunk_number : int
-        The chunk number of the document.
+        Denotes the division of the document's text into manageable segments or 'chunks' for processing.
 
     filename : str
-        The filename of the document.
+        The name of the file to which the document belongs.
 
     uuid : str
-        The UUID of the document. Note that this is not required to be
-        provided when creating the metadata. It is generated automatically
-        when creating the PineconeDocument.
-    """
+        A universally unique identifier (UUID) for the document. This UUID is automatically generated 
+        and is not required to be supplied during metadata creation.
 
+    author : str, optional
+        The name of the author of the document. This field is not mandatory.
+
+    subject : str, optional
+        The subject or topic of the document. This field is optional and may not be applicable to all documents.
+
+    keywords : list[str], optional
+        A list of keywords associated with the document, intended to facilitate search and categorization. 
+        This field is optional.
+
+    creation_date : str, optional
+        The date on which the document was created, formatted as a string. This field is optional.
+
+    modification_date : str, optional
+        The date on which the document was last modified, formatted as a string. This field is optional.
+
+    pages : int, optional
+        The total number of pages in the document. This field is optional and relevant for multi-page documents.
+
+    file_size : int, optional
+        The size of the document file, measured in bytes. This field is optional and provides insight into the document's storage requirements.
+
+    pdf_version : str, optional
+        The version of the PDF format in which the document is encoded, if applicable. This field is optional and relevant for PDF documents.
+    """
     text: str
     page_number: int
     chunk_number: int
     filename: str
     uuid: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    author: str | None = None
+    subject: str | None = None
+    keywords: list[str] | None = None
+    creation_date: str | None = None
+    modification_date: str | None = None
+    pages: int | None = None
+    file_size: int | None = None
+    pdf_version: str | None = None
 
 
 class PineconeDocument(BaseModel, extra="forbid"):
@@ -128,29 +164,75 @@ class PineconeMatch(BaseModel, extra="ignore"):
 
 
 class Rule(BaseModel):
-    """Retrieval rule.
+    """
+    Defines a retrieval rule used for filtering documents within an index based on specified criteria.
 
-    The rule is used to filter the documents in the index.
+    This class allows for the creation of complex retrieval rules that can be applied to the indexing and 
+    retrieval processes, enabling precise control over which documents are returned based on the attributes 
+    defined below. The class also includes methods for transforming these rules into formats suitable for 
+    use in filtering operations.
 
     Attributes
     ----------
-    filename : str | None
-        The filename of the document.
+    filename : str, optional
+        The name of the file. If specified, the rule will apply only to documents with this filename.
 
-    uuid : str | None
-        The UUID of the document.
+    uuid : str, optional
+        The universally unique identifier (UUID) of the document. If specified, the rule will apply only 
+        to the document with this UUID.
 
-    page_numbers : list[int] | None
-        The page numbers of the document.
+    page_numbers : list[int], optional
+        A list of page numbers. If specified, the rule will apply only to the pages within this list.
 
-    keywords : list[str] | None
-        The keywords to trigger a rule.
+    keywords : list[str], optional
+        A list of keywords associated with the document. If specified, the rule will apply to documents 
+        containing these keywords.
+
+    author : str, optional
+        The author of the document. If specified, the rule will apply only to documents authored by this individual.
+
+    subject : str, optional
+        The subject or topic of the document. If specified, the rule will apply only to documents related to this subject.
+
+    creation_date : str, optional
+        The date the document was created. If specified, the rule will apply only to documents created on this date.
+
+    modification_date : str, optional
+        The date the document was last modified. If specified, the rule will apply only to documents modified on this date.
+
+    pages : int, optional
+        The total number of pages in the document. If specified, the rule will apply only to documents with this number of pages.
+
+    file_size : int, optional
+        The size of the document file in bytes. If specified, the rule will apply only to documents of this file size.
+
+    pdf_version : str, optional
+        The version of the PDF format of the document. If specified, the rule will apply only to documents in this PDF version.
+
+    Methods
+    -------
+    convert_empty_to_none(v: list[int] | None) -> list[int] | None
+        Class method to convert an empty list of integers to None, primarily used for the 'page_numbers' attribute.
+
+    convert_empty_str_to_none(s: list[str] | None) -> list[str] | None
+        Converts an empty list of strings to None, primarily used for attributes that accept lists of strings like 'keywords'.
+
+    to_filter() -> dict[str, list[dict[str, Any]]] | None
+        Converts the rule instance into a format that can be used as a filter in Pinecone or similar systems. This method 
+        aggregates the conditions based on the attributes specified and returns a dictionary that represents the filter criteria.
     """
-
+    
     filename: str | None = None
     uuid: str | None = None
     page_numbers: list[int] | None = None
     keywords: list[str] | None = None
+    author: str | None = None
+    subject: str | None = None
+    creation_date: str | None = None
+    modification_date: str | None = None
+    pages: int | None = None
+    file_size: int | None = None
+    pdf_version: str | None = None
 
     @field_validator("page_numbers", mode="before")
     @classmethod
@@ -424,6 +506,7 @@ class Client:
         namespace: str,
         embedding_model: str = "text-embedding-3-small",
         batch_size: int = 100,
+        metadata_fields: list[str] | None = None,
     ) -> None:
         """Upload documents to the index.
 
@@ -473,12 +556,16 @@ class Client:
         # create PineconeDocuments
         pinecone_documents = []
         for i, (chunk, embedding) in enumerate(zip(all_chunks, embeddings)):
-            metadata = PineconeMetadata(
-                text=chunk.page_content,
-                page_number=chunk.metadata["page"],
-                chunk_number=chunk.metadata["chunk"],
-                filename=chunk.metadata["source"],
-            )
+            metadata_dict = {
+                "text": chunk.page_content,
+                "page_number": chunk.metadata["page"],
+                "chunk_number": chunk.metadata["chunk"],
+                "filename": chunk.metadata["source"],
+            }
+            if metadata_fields:
+                for field in metadata_fields:
+                    metadata_dict[field] = chunk.metadata.get(field)
+            metadata = PineconeMetadata(**metadata_dict)
             pinecone_document = PineconeDocument(
                 values=embedding,
                 metadata=metadata,

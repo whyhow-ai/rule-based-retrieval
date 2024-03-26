@@ -62,7 +62,6 @@ class TestRule:
             ]
         }
 
-
 class TestPineconeDocument:
     def test_generate_id(self):
         metadata = PineconeMetadata(
@@ -70,6 +69,8 @@ class TestPineconeDocument:
             page_number=1,
             chunk_number=0,
             filename="hello.pdf",
+            author=None,
+            subject=None,
         )
         doc = PineconeDocument(
             values=[0.2, 0.3],
@@ -84,6 +85,8 @@ class TestPineconeDocument:
             page_number=1,
             chunk_number=0,
             filename="hello.pdf",
+            author=None, 
+            subject=None,
         )
         doc = PineconeDocument(
             values=[0.2, 0.3],
@@ -644,6 +647,8 @@ class TestClient:
                 Rule(
                     filename="hello.pdf",
                     page_numbers=[1],
+                    author=None, 
+                    subject=None,
                 ),
                 Rule(
                     page_numbers=[0],

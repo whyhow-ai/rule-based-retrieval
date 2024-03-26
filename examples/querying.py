@@ -29,17 +29,22 @@ logger.info(f"Index {index_name} exists")
 
 rules = [
     Rule(
-        # Replace with your filename
-        filename="doc1.pdf",
-        page_numbers=[26],
-        keywords=['word', 'test']
-    ),
-    Rule(
-        # Replace with your filename
-        filename="doc2.pdf",
+        filename="doc1.pdf",  # Replace with your filename
         page_numbers=[2],
         keywords=[],
-    )
+    ),
+    Rule(
+        filename="doc2.pdf",  # Replace with your filename
+        page_numbers=[26],
+        keywords=['word', 'test'],
+        author="John Doe",
+        subject="Research Paper",
+        creation_date="2022-01-01",
+        modification_date="2022-03-15",
+        pages=30,
+        file_size=1024000,
+        pdf_version="1.7",
+    ),
 ]
 
 result = client.query(
