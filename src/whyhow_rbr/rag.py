@@ -160,7 +160,9 @@ class Rule(BaseModel):
             return None
         return v
 
-    def convert_empty_str_to_none(cls, s: list[str] | None) -> list[str] | None:
+    def convert_empty_str_to_none(
+        cls, s: list[str] | None
+    ) -> list[str] | None:
         """Convert empty string list to None."""
         if s is not None and not s:
             return None
@@ -493,10 +495,7 @@ class Client:
         n_upserted = response["upserted_count"]
         logger.info(f"Upserted {n_upserted} documents")
 
-    def clean_text(
-        self,
-        text: str
-    ) -> str:
+    def clean_text(self, text: str) -> str:
         """Return a lower case version of text with punctuation removed.
 
         Parameters
@@ -508,8 +507,8 @@ class Client:
         -------
         str: The cleaned text string.
         """
-        text_processed = re.sub('[^0-9a-zA-Z ]+', '', text.lower())
-        text_processed_further = re.sub(' +', ' ', text_processed)
+        text_processed = re.sub("[^0-9a-zA-Z ]+", "", text.lower())
+        text_processed_further = re.sub(" +", " ", text_processed)
         return text_processed_further
 
     def query(
@@ -525,7 +524,7 @@ class Client:
         chat_seed: int = 2,
         embedding_model: str = "text-embedding-3-small",
         process_rules_separately: bool = False,
-        keyword_trigger: bool = False
+        keyword_trigger: bool = False,
     ) -> QueryReturnType:
         """Query the index.
 
@@ -588,18 +587,20 @@ class Client:
             include the chat model not finishing or the response not being
             valid JSON.
         """
-        logger.info(f'Raw rules: {rules}')
+        logger.info(f"Raw rules: {rules}")
 
         if rules is None:
             rules = []
 
         if keyword_trigger:
             triggered_rules = []
-            clean_question = self.clean_text(question).split(' ')
+            clean_question = self.clean_text(question).split(" ")
 
             for rule in rules:
                 if rule.keywords:
-                    clean_keywords = [self.clean_text(keyword) for keyword in rule.keywords]
+                    clean_keywords = [
+                        self.clean_text(keyword) for keyword in rule.keywords
+                    ]
 
                     if bool(set(clean_keywords) & set(clean_question)):
                         triggered_rules.append(rule)
@@ -614,7 +615,9 @@ class Client:
             model=embedding_model,
         )[0]
 
-        matches = []  # Initialize matches outside the loop to collect matches from all queries
+        matches = (
+            []
+        )  # Initialize matches outside the loop to collect matches from all queries
         match_texts = []
 
         # Check if there are any rule filters, and if not, proceed with a default query
@@ -644,11 +647,16 @@ class Client:
                             filter=rule_filter,
                             include_metadata=True,
                         )
-                        matches.extend([
-                            PineconeMatch(**m.to_dict()) for m in query_response["matches"]
-                        ])
+                        matches.extend(
+                            [
+                                PineconeMatch(**m.to_dict())
+                                for m in query_response["matches"]
+                            ]
+                        )
                         match_texts += [m.metadata.text for m in matches]
-                match_texts = list(set(match_texts))  # Ensure unique match texts
+                match_texts = list(
+                    set(match_texts)
+                )  # Ensure unique match texts
             else:
                 if rule_filters:
                     combined_filters = []
@@ -656,7 +664,9 @@ class Client:
                         if rule_filter:
                             combined_filters.append(rule_filter)
 
-                    rule_filter = {"$or": combined_filters} if combined_filters else None
+                    rule_filter = (
+                        {"$or": combined_filters} if combined_filters else None
+                    )
                 else:
                     rule_filter = None  # Fallback to a default query when no rules are provided or valid
 
@@ -669,7 +679,8 @@ class Client:
                         include_metadata=True,
                     )
                     matches = [
-                        PineconeMatch(**m.to_dict()) for m in query_response["matches"]
+                        PineconeMatch(**m.to_dict())
+                        for m in query_response["matches"]
                     ]
                     match_texts = [m.metadata.text for m in matches]
 

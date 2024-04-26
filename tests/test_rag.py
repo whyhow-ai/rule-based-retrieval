@@ -12,7 +12,13 @@ from whyhow_rbr.exceptions import (
     IndexNotFoundException,
     OpenAIException,
 )
-from whyhow_rbr.rag import Client, Output, PineconeDocument, PineconeMetadata, Rule
+from whyhow_rbr.rag import (
+    Client,
+    Output,
+    PineconeDocument,
+    PineconeMetadata,
+    Rule,
+)
 
 
 class TestRule:
@@ -248,7 +254,9 @@ class TestClient:
         fake_clean_chunks = Mock(return_value=parsed_docs)
         fake_generate_embeddings = Mock(return_value=6 * [[2.2, 0.6]])
 
-        monkeypatch.setattr("whyhow_rbr.rag.parse_and_split", fake_parse_and_split)
+        monkeypatch.setattr(
+            "whyhow_rbr.rag.parse_and_split", fake_parse_and_split
+        )
         monkeypatch.setattr("whyhow_rbr.rag.clean_chunks", fake_clean_chunks)
         monkeypatch.setattr(
             "whyhow_rbr.rag.generate_embeddings", fake_generate_embeddings
@@ -309,7 +317,9 @@ class TestClient:
         fake_clean_chunks = Mock(return_value=parsed_docs)
         fake_generate_embeddings = Mock(return_value=5 * [[2.2, 0.6]])
 
-        monkeypatch.setattr("whyhow_rbr.rag.parse_and_split", fake_parse_and_split)
+        monkeypatch.setattr(
+            "whyhow_rbr.rag.parse_and_split", fake_parse_and_split
+        )
         monkeypatch.setattr("whyhow_rbr.rag.clean_chunks", fake_clean_chunks)
         monkeypatch.setattr(
             "whyhow_rbr.rag.generate_embeddings", fake_generate_embeddings

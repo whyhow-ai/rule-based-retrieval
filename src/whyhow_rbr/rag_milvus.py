@@ -4,24 +4,27 @@ import logging
 import os
 import pathlib
 import re
-from typing import Any, TypedDict, cast, Optional, Dict, List
+from typing import Any, Dict, List, Optional, TypedDict, cast
 
 from langchain_core.documents import Document
 from openai import OpenAI
-from pydantic import (
-    BaseModel,
-    ValidationError,
-)
+from pydantic import BaseModel, ValidationError
+from pymilvus import CollectionSchema, DataType, MilvusClient, MilvusException
 from pymilvus.milvus_client import IndexParams
-from pymilvus import MilvusClient, DataType, CollectionSchema, MilvusException
 
 from whyhow_rbr.embedding import generate_embeddings
-from whyhow_rbr.exceptions import OpenAIException
+from whyhow_rbr.exceptions import (
+    AddSchemaFieldFailureException,
+    CollectionAlreadyExistsException,
+    CollectionCreateFailureException,
+    CollectionNotFoundException,
+    OpenAIException,
+    PartitionCreateFailureException,
+    PartitionDropFailureException,
+    PartitionListFailureException,
+    SchemaCreateFailureException,
+)
 from whyhow_rbr.processing import clean_chunks, parse_and_split
-from src.whyhow_rbr.exceptions import (CollectionNotFoundException, CollectionAlreadyExistsException,
-                                       SchemaCreateFailureException, CollectionCreateFailureException,
-                                       AddSchemaFieldFailureException, PartitionCreateFailureException,
-                                       PartitionDropFailureException, PartitionListFailureException)
 
 logger = logging.getLogger(__name__)
 
@@ -52,6 +55,8 @@ class MilvusMetadata(BaseModel):
 
 
 """Custom classes for constructing prompt, output and query result with examples"""
+
+
 class Input(BaseModel):
     """Example input for the prompt.
 
@@ -141,7 +146,7 @@ class QueryReturnType(TypedDict):
     """
 
     answer: str
-    matches: List[dict]
+    matches: List[Dict[Any, Any]]
     used_contexts: list[int]
 
 
@@ -185,6 +190,8 @@ Both the input and the output are JSON objects.
 
 
 """Implementing RAG by Milvus"""
+
+
 class ClientMilvus:
     """Synchronous client."""
 
@@ -192,7 +199,7 @@ class ClientMilvus:
         self,
         milvus_uri: str,
         milvus_token: str,
-        milvus_db_name: str = None,
+        milvus_db_name: Optional[str] = None,
         timeout: float | None = None,
         openai_api_key: str | None = None,
     ):
@@ -212,10 +219,8 @@ class ClientMilvus:
         )
 
     def get_collection_stats(
-            self,
-            collection_name: str,
-            timeout: Optional[float] = None
-    ) -> Dict:
+        self, collection_name: str, timeout: Optional[float] = None
+    ) -> Dict[str, Any]:
         """Get an existing collection.
 
         Parameters
@@ -238,17 +243,21 @@ class ClientMilvus:
             If the collection does not exist.
         """
         try:
-            collection_stats = self.milvus_client.describe_collection(collection_name, timeout)
+            collection_stats = self.milvus_client.describe_collection(
+                collection_name, timeout
+            )
         except MilvusException as e:
-            raise CollectionNotFoundException(f"Collection {collection_name} does not exist") from e
+            raise CollectionNotFoundException(
+                f"Collection {collection_name} does not exist"
+            ) from e
 
         return collection_stats
 
     def create_schema(
-            self,
-            auto_id: bool = False,
-            enable_dynamic_field: bool = True,
-            **kwargs: Any
+        self,
+        auto_id: bool = False,
+        enable_dynamic_field: bool = True,
+        **kwargs: Any,
     ) -> CollectionSchema:
         """Create a schema to add in collection.
 
@@ -275,7 +284,7 @@ class ClientMilvus:
             schema = MilvusClient.create_schema(
                 auto_id=auto_id,
                 enable_dynamic_field=enable_dynamic_field,
-                **kwargs
+                **kwargs,
             )
         except MilvusException as e:
             raise SchemaCreateFailureException("Schema create failure.") from e
@@ -288,7 +297,7 @@ class ClientMilvus:
         field_name: str,
         datatype: DataType,
         is_primary: bool = False,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> CollectionSchema:
         """Add Field to current schema.
 
@@ -347,20 +356,22 @@ class ClientMilvus:
         AddSchemaFieldFailureException
             If schema create failure.
         """
-
         try:
             schema.add_field(
                 field_name=field_name,
                 datatype=datatype,
                 is_primary=is_primary,
-                **kwargs
+                **kwargs,
             )
         except MilvusException as e:
-            raise AddSchemaFieldFailureException(f"Fail to add {field_name} to current schema.") from e
+            raise AddSchemaFieldFailureException(
+                f"Fail to add {field_name} to current schema."
+            ) from e
 
         return schema
 
     def prepare_index_params(self) -> IndexParams:
+        """Prepare an index object."""
         index_params = self.milvus_client.prepare_index_params()
 
         return index_params
@@ -370,9 +381,9 @@ class ClientMilvus:
         index_params: IndexParams,
         field_name: str,
         index_type: str = "AUTOINDEX",
-        index_name: str = None,
-        metric_type: str = 'COSINE',
-        params: dict = None
+        index_name: Optional[str] = None,
+        metric_type: str = "COSINE",
+        params: Optional[Dict[str, Any]] = None,
     ) -> IndexParams:
         """Add an index to IndexParams Object.
 
@@ -401,7 +412,7 @@ class ClientMilvus:
             index_type=index_type,
             index_name=index_name,
             metric_type=metric_type,
-            params=params
+            params=params,
         )
 
         return index_params
@@ -411,7 +422,7 @@ class ClientMilvus:
         collection_name: str,
         index_params: IndexParams,
         timeout: Optional[float] = None,
-        **kwargs,
+        **kwargs: Dict[str, Any],
     ) -> None:
         """Create an index.
 
@@ -430,20 +441,20 @@ class ClientMilvus:
             collection_name=collection_name,
             index_params=index_params,
             timeout=timeout,
-            **kwargs
+            **kwargs,
         )
 
     def create_collection(
         self,
         collection_name: str,
-        dimension: int = None,
+        dimension: Optional[int] = None,
         metric_type: str = "COSINE",
         timeout: Optional[float] = None,
         schema: Optional[CollectionSchema] = None,
         index_params: Optional[IndexParams] = None,
         enable_dynamic_field: bool = True,
         **kwargs: Any,
-    ):
+    ) -> None:
         """Create a new collection.
 
         If the collection does not exist, it creates a new collection with the specified.
@@ -482,7 +493,9 @@ class ClientMilvus:
         except CollectionNotFoundException:
             pass
         else:
-            raise CollectionAlreadyExistsException(f"Collection {collection_name} already exists")
+            raise CollectionAlreadyExistsException(
+                f"Collection {collection_name} already exists"
+            )
 
         try:
             self.milvus_client.create_collection(
@@ -493,16 +506,18 @@ class ClientMilvus:
                 index_params=index_params,
                 timeout=timeout,
                 enable_dynamic_field=enable_dynamic_field,
-                **kwargs
+                **kwargs,
             )
         except MilvusException as e:
-            raise CollectionCreateFailureException(f"Collection {collection_name} fail to create") from e
+            raise CollectionCreateFailureException(
+                f"Collection {collection_name} fail to create"
+            ) from e
 
     def crate_partition(
         self,
         collection_name: str,
         partition_name: str,
-        timeout: Optional[float] = None
+        timeout: Optional[float] = None,
     ) -> None:
         """Create a partition in collection.
 
@@ -529,16 +544,18 @@ class ClientMilvus:
             self.milvus_client.create_partition(
                 collection_name=collection_name,
                 partition_name=partition_name,
-                timeout=timeout
+                timeout=timeout,
             )
         except MilvusException as e:
-            raise PartitionCreateFailureException(f"Partition {partition_name} fail to create") from e
+            raise PartitionCreateFailureException(
+                f"Partition {partition_name} fail to create"
+            ) from e
 
     def drop_partition(
         self,
         collection_name: str,
         partition_name: str,
-        timeout: Optional[float] = None
+        timeout: Optional[float] = None,
     ) -> None:
         """Drop a partition in collection.
 
@@ -565,16 +582,16 @@ class ClientMilvus:
             self.milvus_client.drop_partition(
                 collection_name=collection_name,
                 partition_name=partition_name,
-                timeout=timeout
+                timeout=timeout,
             )
         except MilvusException as e:
-            raise PartitionDropFailureException(f"Partition {partition_name} fail to create") from e
+            raise PartitionDropFailureException(
+                f"Partition {partition_name} fail to drop"
+            ) from e
 
     def list_partition(
-        self,
-        collection_name: str,
-        timeout: Optional[float] = None
-    ) -> list:
+        self, collection_name: str, timeout: Optional[float] = None
+    ) -> List[str]:
         """List all partitions in the specific collection.
 
         Parameters
@@ -588,7 +605,7 @@ class ClientMilvus:
             Setting this to None indicates that this operation timeouts when any response arrives or any error occurs.
 
         Returns
-        ------
+        -------
         partitions : list[str]
             All the partitions in that specific collection.
 
@@ -599,18 +616,16 @@ class ClientMilvus:
         """
         try:
             partitions = self.milvus_client.list_partitions(
-                collection_name=collection_name,
-                timeout=timeout
+                collection_name=collection_name, timeout=timeout
             )
         except MilvusException as e:
-            raise PartitionListFailureException(f"Partition from {collection_name} fail to listing") from e
+            raise PartitionListFailureException(
+                f"Partitions from {collection_name} fail to list"
+            ) from e
 
         return partitions
 
-    def drop_collection(
-            self,
-            collection_name: str
-    ):
+    def drop_collection(self, collection_name: str) -> None:
         """Delete an existing collection.
 
         Parameters
@@ -624,18 +639,18 @@ class ClientMilvus:
             If the collection does not exist.
         """
         try:
-            self.milvus_client.drop_collection(
-                collection_name=collection_name
-            )
+            self.milvus_client.drop_collection(collection_name=collection_name)
         except MilvusException as e:
-            raise CollectionNotFoundException(f"Collection {collection_name} not found") from e
+            raise CollectionNotFoundException(
+                f"Collection {collection_name} not found"
+            ) from e
 
     def upload_documents(
         self,
         collection_name: str,
-        documents: list[str | pathlib.Path],
-        partition_name: str | None = None,
-        embedding_model: str = "text-embedding-3-small"
+        documents: List[str | pathlib.Path],
+        partition_name: Optional[str] = None,
+        embedding_model: str = "text-embedding-3-small",
     ) -> None:
         """Upload documents to the index.
 
@@ -679,36 +694,34 @@ class ClientMilvus:
             )
 
         data = []
-        metadata = dict()
         for i, (chunk, embedding) in enumerate(zip(all_chunks, embeddings)):
             rawdata = MilvusMetadata(
                 text=chunk.page_content,
                 page_number=chunk.metadata["page"],
                 chunk_number=chunk.metadata["chunk"],
                 filename=chunk.metadata["source"],
-                vector=embedding
+                vector=embedding,
             )
-            metadata['text'] = rawdata.text
-            metadata['page_number'] = rawdata.page_number
-            metadata['chunk_number'] = rawdata.chunk_number
-            metadata['filename'] = rawdata.filename
-            metadata['embedding'] = rawdata.vector
+            metadata = {
+                "text": rawdata.text,
+                "page_number": str(rawdata.page_number),
+                "chunk_number": str(rawdata.chunk_number),
+                "filename": rawdata.filename,
+                "embedding": list(rawdata.vector),
+            }
 
             data.append(metadata)
 
         response = self.milvus_client.insert(
             collection_name=collection_name,
             partition_name=partition_name,
-            data=data
+            data=data,
         )
 
         insert_count = response["insert_count"]
         logger.info(f"Inserted {insert_count} documents")
 
-    def clean_text(
-        self,
-        text: str
-    ) -> str:
+    def clean_text(self, text: str) -> str:
         """Return a lower case version of text with punctuation removed.
 
         Parameters
@@ -720,23 +733,20 @@ class ClientMilvus:
         -------
         str: The cleaned text string.
         """
-        text_processed = re.sub('[^0-9a-zA-Z ]+', '', text.lower())
-        text_processed_further = re.sub(' +', ' ', text_processed)
+        text_processed = re.sub("[^0-9a-zA-Z ]+", "", text.lower())
+        text_processed_further = re.sub(" +", " ", text_processed)
         return text_processed_further
 
     def create_search_params(
-            self,
-            metric_type: str = "COSINE",
-            params: dict = None,
-    ) -> dict:
-
+        self,
+        metric_type: str = "COSINE",
+        params: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
+        """Create search parameters for the Milvus search."""
         if params is None:
             params = {}
 
-        search_params = {
-            "metric_type": metric_type,
-            "params": params
-        }
+        search_params = {"metric_type": metric_type, "params": params}
 
         return search_params
 
@@ -744,18 +754,18 @@ class ClientMilvus:
         self,
         question: str,
         collection_name: str,
-        anns_field: str = None,
-        partition_names: list[str] = None,
-        filter: str = '',
+        anns_field: Optional[str] = None,
+        partition_names: Optional[List[str]] = None,
+        filter: str = "",
         limit: int = 5,
-        output_fields: Optional[str] = None,
-        search_params: Optional[dict] = None,
+        output_fields: Optional[List[str]] = None,
+        search_params: Optional[Dict[str, Any]] = None,
         chat_model: str = "gpt-4-1106-preview",
         chat_temperature: float = 0.0,
         chat_max_tokens: int = 1000,
         chat_seed: int = 2,
         embedding_model: str = "text-embedding-3-small",
-        **kwargs,
+        **kwargs: Dict[str, Any],
     ) -> QueryReturnType:
         """Query the index.
 
@@ -809,12 +819,12 @@ class ClientMilvus:
             valid JSON.
         """
         if output_fields is None:
-            output_fields = ['text', 'filename', 'page_number']
+            output_fields = ["text", "filename", "page_number"]
 
         if search_params is None:
             search_params = {}
 
-        logger.info(f'Filter: {filter} and Search params: {search_params}')
+        logger.info(f"Filter: {filter} and Search params: {search_params}")
 
         # size of 1024
         question_embedding = generate_embeddings(
@@ -823,9 +833,9 @@ class ClientMilvus:
             model=embedding_model,
         )[0]
 
-        match_texts = []
+        match_texts: List[str] = []
 
-        results = []
+        results: Optional[List[Any]] = []
         i = 0
         while results is not None and i < 5:
             results = self.milvus_client.search(
@@ -837,14 +847,14 @@ class ClientMilvus:
                 output_fields=[output_fields],
                 limit=limit,
                 search_params=search_params,
-                **kwargs
+                **kwargs,
             )
             i += 1
 
-        print(results)
-        for result in results:
-            text = result[0]['entity']['text']
-            match_texts.append(text)
+        if results is not None:
+            for result in results:
+                text = result[0]["entity"]["text"]
+                match_texts.append(text)
 
         # Proceed to create prompt, send it to OpenAI, and handle the response
         prompt = self.create_prompt(question, match_texts)
@@ -860,9 +870,12 @@ class ClientMilvus:
 
         return_dict: QueryReturnType = {
             "answer": output.answer,
-            "matches": results[0],
+            "matches": [],
             "used_contexts": output.contexts,
         }
+
+        if results is not None and len(results) > 0:
+            return_dict["matches"] = results[0]
 
         return return_dict
 
