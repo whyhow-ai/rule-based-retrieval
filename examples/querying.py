@@ -32,14 +32,14 @@ rules = [
         # Replace with your filename
         filename="doc1.pdf",
         page_numbers=[26],
-        keywords=['word', 'test']
+        keywords=["word", "test"],
     ),
     Rule(
         # Replace with your filename
         filename="doc2.pdf",
         page_numbers=[2],
         keywords=[],
-    )
+    ),
 ]
 
 result = client.query(
@@ -49,7 +49,7 @@ result = client.query(
     rules=rules,
     top_k=top_k,
     process_rules_separately=False,
-    keyword_trigger=False
+    keyword_trigger=False,
 )
 answer = result["answer"]
 
