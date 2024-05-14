@@ -198,7 +198,7 @@ class ClientMilvus:
     def __init__(
         self,
         milvus_uri: str,
-        milvus_token: str,
+        milvus_token: str = None,
         milvus_db_name: Optional[str] = None,
         timeout: float | None = None,
         openai_api_key: str | None = None,

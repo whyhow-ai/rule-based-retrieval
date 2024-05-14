@@ -6,14 +6,13 @@ from pymilvus import DataType
 
 from src.whyhow_rbr.rag_milvus import ClientMilvus
 
-# Set up your Milvus Cloud information
-YOUR_MILVUS_CLOUD_END_POINT = os.getenv("YOUR_MILVUS_CLOUD_END_POINT")
-YOUR_MILVUS_CLOUD_TOKEN = os.getenv("YOUR_MILVUS_CLOUD_TOKEN")
+# Set up your Milvus Client information
+YOUR_MILVUS_LITE_FILE_PATH = "./milvus_demo.db" # random name for milvus lite local db
+
 
 # Initialize the ClientMilvus
 milvus_client = ClientMilvus(
-    milvus_uri=YOUR_MILVUS_CLOUD_END_POINT,
-    milvus_token=YOUR_MILVUS_CLOUD_TOKEN,
+    milvus_uri=YOUR_MILVUS_LITE_FILE_PATH,
 )
 
 

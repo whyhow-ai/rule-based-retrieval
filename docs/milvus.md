@@ -12,7 +12,7 @@ Please import some essential package
 ```python
 from pymilvus import DataType
 
-from src.whyhow_rbr.rag_milvus import ClientMilvus
+from whyhow_rbr import ClientMilvus
 ```
 
 ## Client
@@ -25,19 +25,19 @@ credentials:
 
 - `OPENAI_API_KEY`
 - `Milvus_URI`
-- `Milvus_API_TOKEN`
+
+You need to create a file of format "xxx.db" in your current directory 
+and use the file path as milvus_uri.
 
 Initialize the ClientMilvus like this:
 
 ```python
-# Set up your Milvus Cloud information
-YOUR_MILVUS_CLOUD_END_POINT="YOUR_MILVUS_CLOUD_END_POINT"
-YOUR_MILVUS_CLOUD_TOKEN="YOUR_MILVUS_CLOUD_TOKEN"
+# Set up your Milvus Client information
+YOUR_MILVUS_LITE_FILE_PATH = "./milvus_demo.db" # random name for milvus lite local db
 
 # Initialize the ClientMilvus
 milvus_client = ClientMilvus(
-    milvus_uri=YOUR_MILVUS_CLOUD_END_POINT,
-    milvus_token=YOUR_MILVUS_CLOUD_TOKEN
+    milvus_uri=YOUR_MILVUS_LITE_FILE_PATH,
 )
 ```
 
