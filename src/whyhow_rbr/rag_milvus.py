@@ -46,7 +46,6 @@ class MilvusMetadata(BaseModel, extra="forbid"):
     page_number: int
     chunk_number: int
     filename: str
-    vector: List[float]
     uuid: str = Field(default_factory=lambda: str(uuid.uuid4()))
 
 
@@ -72,7 +71,7 @@ class MilvusMatch(BaseModel, extra="ignore"):
     metadata: MilvusMetadata
 
 
-class Rule(BaseModel):
+class MilvusRule(BaseModel):
     """Retrieval rule.
 
     The rule is used to filter the documents in the index.
@@ -118,11 +117,11 @@ class Rule(BaseModel):
 
         conditions: list = []
         if self.filename is not None:
-            conditions.append(f"filename == '{self.filename}'")
+            conditions.append(f'filename == "{self.filename}"')
         if self.uuid is not None:
-            conditions.append(f"id == '{self.uuid}'")
+            conditions.append(f'id == "{self.uuid}"')
         if self.page_numbers is not None:
-            conditions.append(f"page_numbers in {self.page_numbers}")
+            conditions.append(f"page_number in {self.page_numbers}")
 
         filter_ = " and ".join(conditions)
         return filter_
@@ -268,12 +267,10 @@ class ClientMilvus:
 
     def __init__(
         self,
-        milvus_uri: str,
-        collection_name: str,
+        milvus_uri_key: str,
         milvus_token: str = None,
         openai_api_key: str | None = None,
     ):
-        self.collection_name = collection_name
         if openai_api_key is None:
             openai_api_key = os.environ.get("OPENAI_API_KEY")
             if openai_api_key is None:
@@ -283,12 +280,13 @@ class ClientMilvus:
 
         self.openai_client = OpenAI(api_key=openai_api_key)
         self.milvus_client = MilvusClient(
-            uri=milvus_uri,
+            uri=milvus_uri_key,
             token=milvus_token,
         )
 
     def create_collection(
             self,
+            collection_name: str,
             dimension: int = 1536,
     ) -> None:
         """
@@ -301,6 +299,7 @@ class ClientMilvus:
         Returns:
             None
         """
+        self.collection_name = collection_name
         if self.milvus_client.has_collection(collection_name=self.collection_name):
             raise CollectionAlreadyExistsException(f"Collection {self.collection_name} already exists")
 
@@ -459,17 +458,17 @@ class ClientMilvus:
 
         return search_params
 
-    def search(
+    def query(
         self,
         question: str,
-        rules: list[Rule] | None = None,
+        rules: list[MilvusRule] | None = None,
         limit: int = 5,
         chat_model: str = "gpt-4-1106-preview",
         chat_temperature: float = 0.0,
         chat_max_tokens: int = 1000,
         chat_seed: int = 2,
         embedding_model: str = "text-embedding-3-small",
-        process_rules_separately: bool = False,
+        process_rules_separately: bool = True,
         keyword_trigger: bool = False,
         **kwargs: Dict[str, Any],
     ) -> QueryReturnType:
@@ -520,7 +519,6 @@ class ClientMilvus:
         if rules is None:
             rules = []
 
-        '''
         if keyword_trigger:
             triggered_rules = []
             clean_question = self.clean_text(question).split(' ')
@@ -533,7 +531,6 @@ class ClientMilvus:
                         triggered_rules.append(rule)
 
             rules = triggered_rules
-        '''
 
         rule_filters = [rule.to_filter() for rule in rules if rule is not None]
 
@@ -542,7 +539,7 @@ class ClientMilvus:
             openai_api_key=self.openai_client.api_key,
             chunks=[question],
             model=embedding_model,
-        )[0]
+        )
 
         matches = []
         match_texts: List[str] = []
@@ -554,6 +551,7 @@ class ClientMilvus:
                 collection_name=self.collection_name,
                 limit=limit,
                 data=question_embedding,
+                output_fields=["*"],
             )
             matches = [
                 MilvusMatch(
@@ -578,6 +576,7 @@ class ClientMilvus:
                         data=question_embedding,
                         filter=rule_filter,
                         limit=limit,
+                        output_fields=["*"],
                     )
                     matches = [
                         MilvusMatch(
@@ -602,6 +601,7 @@ class ClientMilvus:
                         data=question_embedding,
                         filter=rule_filter,
                         limit=limit,
+                        output_fields=["*"],
                     )
                     matches = [
                         MilvusMatch(
