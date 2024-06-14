@@ -104,7 +104,8 @@ warn_required_dynamic_aliases = true
 
 [tool.pytest.ini_options]
 filterwarnings = [
-    "error"
+    "error",
+    "ignore::DeprecationWarning:pkg_resources.*"
 ]
 testpaths = [
     "tests",
