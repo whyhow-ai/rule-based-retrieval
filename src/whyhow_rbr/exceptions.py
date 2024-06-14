@@ -31,37 +31,7 @@ class CollectionAlreadyExistsException(Exception):
     pass
 
 
-class SchemaCreateFailureException(Exception):
-    """Raised when fail to create a new schema."""
-
-    pass
-
-
 class CollectionCreateFailureException(Exception):
     """Raised when fail to create a new collection."""
-
-    pass
-
-
-class AddSchemaFieldFailureException(Exception):
-    """Raised when fail to add a field to schema."""
-
-    pass
-
-
-class PartitionCreateFailureException(Exception):
-    """Raised when fail to create a partition."""
-
-    pass
-
-
-class PartitionDropFailureException(Exception):
-    """Raised when fail to drop a partition."""
-
-    pass
-
-
-class PartitionListFailureException(Exception):
-    """Raised when fail to list all partitions."""
 
     pass
