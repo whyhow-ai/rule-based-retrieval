@@ -3,7 +3,9 @@
 from whyhow_rbr import ClientMilvus, MilvusRule
 
 # Set up your Milvus Client information
-YOUR_MILVUS_LITE_FILE_PATH = "milvus_demo.db" # random name for milvus lite local db
+YOUR_MILVUS_LITE_FILE_PATH = (
+    "milvus_demo.db"  # random name for milvus lite local db
+)
 
 
 # Define collection name
@@ -12,7 +14,7 @@ COLLECTION_NAME = "YOUR_COLLECTION_NAME"  # take your own collection name
 # Initialize the ClientMilvus
 milvus_client = ClientMilvus(
     milvus_uri_key=YOUR_MILVUS_LITE_FILE_PATH,
-    openai_api_key="<YOUR_OPEN_AI_KEY>"
+    openai_api_key="<YOUR_OPEN_AI_KEY>",
 )
 
 
@@ -24,9 +26,7 @@ milvus_client.create_collection(collection_name=COLLECTION_NAME)
 # get pdfs from data directory in current directory
 pdfs = ["data/1.pdf", "data/2.pdf"]  # replace to your pdfs path
 
-milvus_client.upload_documents(
-    documents=pdfs
-)
+milvus_client.upload_documents(documents=pdfs)
 
 
 # add your rules:
@@ -40,7 +40,7 @@ rules = [
         # Replace with your filename
         filename="data/2.pdf",
         page_numbers=[],
-    )
+    ),
 ]
 
 

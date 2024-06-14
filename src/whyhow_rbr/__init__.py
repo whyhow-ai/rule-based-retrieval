@@ -1,12 +1,12 @@
 """SDK."""
 
-from src.whyhow_rbr.exceptions import (
+from whyhow_rbr.exceptions import (
+    CollectionAlreadyExistsException,
+    CollectionCreateFailureException,
+    CollectionNotFoundException,
     IndexAlreadyExistsException,
     IndexNotFoundException,
     OpenAIException,
-    CollectionNotFoundException,
-    CollectionAlreadyExistsException,
-    CollectionCreateFailureException,
 )
 from whyhow_rbr.rag import Client, Rule
 from whyhow_rbr.rag_milvus import ClientMilvus, MilvusRule
@@ -18,7 +18,6 @@ __all__ = [
     "ClientMilvus",
     "Rule",
     "MilvusRule",
-
     # Error
     "IndexAlreadyExistsException",
     "IndexNotFoundException",

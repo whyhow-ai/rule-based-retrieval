@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Optional, TypedDict, cast
 
 from langchain_core.documents import Document
 from openai import OpenAI
-from pydantic import BaseModel, ValidationError, Field, field_validator
+from pydantic import BaseModel, Field, ValidationError, field_validator
 from pymilvus import DataType, MilvusClient, MilvusException
 
 from whyhow_rbr.embedding import generate_embeddings
@@ -98,13 +98,17 @@ class MilvusRule(BaseModel):
 
     @field_validator("page_numbers", mode="before")
     @classmethod
-    def convert_empty_to_none(cls, v: list[int] | None) -> list[int] | None:
+    def convert_empty_to_none(
+        cls, v: Optional[List[int]]
+    ) -> Optional[List[int]]:
         """Convert empty list to None."""
         if v is not None and not v:
             return None
         return v
 
-    def convert_empty_str_to_none(cls, s: list[str] | None) -> list[str] | None:
+    def convert_empty_str_to_none(
+        cls, s: Optional[List[str]]
+    ) -> Optional[List[str]]:
         """Convert empty string list to None."""
         if s is not None and not s:
             return None
@@ -113,9 +117,9 @@ class MilvusRule(BaseModel):
     def to_filter(self) -> str:
         """Convert rule to Milvus filter format."""
         if not any([self.filename, self.uuid, self.page_numbers]):
-            return ''
+            return ""
 
-        conditions: list = []
+        conditions: List[str] = []
         if self.filename is not None:
             conditions.append(f'filename == "{self.filename}"')
         if self.uuid is not None:
@@ -268,8 +272,8 @@ class ClientMilvus:
     def __init__(
         self,
         milvus_uri_key: str,
-        milvus_token: str = None,
-        openai_api_key: str | None = None,
+        milvus_token: Optional[str] = None,
+        openai_api_key: Optional[str] = None,
     ):
         if openai_api_key is None:
             openai_api_key = os.environ.get("OPENAI_API_KEY")
@@ -285,23 +289,29 @@ class ClientMilvus:
         )
 
     def create_collection(
-            self,
-            collection_name: str,
-            dimension: int = 1536,
+        self,
+        collection_name: str,
+        dimension: int = 1536,
     ) -> None:
         """
         Initialize a collection.
 
-        Parameters:
-            dimension: int
-                The dimension of the collection.
+        Parameters
+        ----------
+        dimension: int
+            The dimension of the collection.
 
-        Returns:
-            None
+        Returns
+        -------
+        None
         """
         self.collection_name = collection_name
-        if self.milvus_client.has_collection(collection_name=self.collection_name):
-            raise CollectionAlreadyExistsException(f"Collection {self.collection_name} already exists")
+        if self.milvus_client.has_collection(
+            collection_name=self.collection_name
+        ):
+            raise CollectionAlreadyExistsException(
+                f"Collection {self.collection_name} already exists"
+            )
 
         try:
             # create schema, with dynamic field available
@@ -353,7 +363,9 @@ class ClientMilvus:
             If the collection does not exist.
         """
         try:
-            self.milvus_client.drop_collection(collection_name=self.collection_name)
+            self.milvus_client.drop_collection(
+                collection_name=self.collection_name
+            )
         except MilvusException as e:
             raise CollectionNotFoundException(
                 f"Collection {self.collection_name} not found"
@@ -426,10 +438,7 @@ class ClientMilvus:
         insert_count = response["insert_count"]
         logger.info(f"Inserted {insert_count} documents")
 
-    def clean_text(
-        self,
-        text: str
-    ) -> str:
+    def clean_text(self, text: str) -> str:
         """Return a lower case version of text with punctuation removed.
 
         Parameters
@@ -441,8 +450,8 @@ class ClientMilvus:
         -------
         str: The cleaned text string.
         """
-        text_processed = re.sub('[^0-9a-zA-Z ]+', '', text.lower())
-        text_processed_further = re.sub(' +', ' ', text_processed)
+        text_processed = re.sub("[^0-9a-zA-Z ]+", "", text.lower())
+        text_processed_further = re.sub(" +", " ", text_processed)
         return text_processed_further
 
     def create_search_params(
@@ -514,18 +523,20 @@ class ClientMilvus:
             include the chat model not finishing or the response not being
             valid JSON.
         """
-        logger.info(f'Raw rules: {rules}')
+        logger.info(f"Raw rules: {rules}")
 
         if rules is None:
             rules = []
 
         if keyword_trigger:
             triggered_rules = []
-            clean_question = self.clean_text(question).split(' ')
+            clean_question = self.clean_text(question).split(" ")
 
             for rule in rules:
                 if rule.keywords:
-                    clean_keywords = [self.clean_text(keyword) for keyword in rule.keywords]
+                    clean_keywords = [
+                        self.clean_text(keyword) for keyword in rule.keywords
+                    ]
 
                     if bool(set(clean_keywords) & set(clean_question)):
                         triggered_rules.append(rule)
@@ -555,15 +566,16 @@ class ClientMilvus:
             )
             matches = [
                 MilvusMatch(
-                    id=m['id'],
-                    score=m['distance'],
+                    id=m["id"],
+                    score=m["distance"],
                     metadata=MilvusMetadata(
-                        text=m['entity']['text'],
-                        page_number = m['entity']['page_number'],
-                        chunk_number=m['entity']['chunk_number'],
-                        filename=m['entity']['filename'],
-                    )
-                ) for m in query_response[0]
+                        text=m["entity"]["text"],
+                        page_number=m["entity"]["page_number"],
+                        chunk_number=m["entity"]["chunk_number"],
+                        filename=m["entity"]["filename"],
+                    ),
+                )
+                for m in query_response[0]
             ]
             match_texts = [m.metadata.text for m in matches]
 
@@ -580,18 +592,21 @@ class ClientMilvus:
                     )
                     matches = [
                         MilvusMatch(
-                            id=m['id'],
-                            score=m['distance'],
+                            id=m["id"],
+                            score=m["distance"],
                             metadata=MilvusMetadata(
-                                text=m['entity']['text'],
-                                page_number=m['entity']['page_number'],
-                                chunk_number=m['entity']['chunk_number'],
-                                filename=m['entity']['filename'],
-                            )
-                        ) for m in query_response[0]
+                                text=m["entity"]["text"],
+                                page_number=m["entity"]["page_number"],
+                                chunk_number=m["entity"]["chunk_number"],
+                                filename=m["entity"]["filename"],
+                            ),
+                        )
+                        for m in query_response[0]
                     ]
                     match_texts = [m.metadata.text for m in matches]
-                match_texts = list(set(match_texts))  # Ensure unique match texts
+                match_texts = list(
+                    set(match_texts)
+                )  # Ensure unique match texts
             else:
                 if rule_filters:
                     rule_filter = " or ".join(rule_filters)
@@ -605,15 +620,16 @@ class ClientMilvus:
                     )
                     matches = [
                         MilvusMatch(
-                            id=m['id'],
-                            score=m['distance'],
+                            id=m["id"],
+                            score=m["distance"],
                             metadata=MilvusMetadata(
-                                text=m['entity']['text'],
-                                page_number=m['entity']['page_number'],
-                                chunk_number=m['entity']['chunk_number'],
-                                filename=m['entity']['filename'],
-                            )
-                        ) for m in query_response[0]
+                                text=m["entity"]["text"],
+                                page_number=m["entity"]["page_number"],
+                                chunk_number=m["entity"]["chunk_number"],
+                                filename=m["entity"]["filename"],
+                            ),
+                        )
+                        for m in query_response[0]
                     ]
                     match_texts = [m.metadata.text for m in matches]
 
