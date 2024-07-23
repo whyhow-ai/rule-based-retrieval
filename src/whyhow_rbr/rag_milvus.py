@@ -271,8 +271,8 @@ class ClientMilvus:
 
     def __init__(
         self,
-        MILVUS_URI: str,
-        MILVUS_TOKEN: Optional[str] = None,
+        milvus_uri: str,
+        milvus_token: Optional[str] = None,
         openai_api_key: Optional[str] = None,
     ):
         if openai_api_key is None:
@@ -284,8 +284,8 @@ class ClientMilvus:
 
         self.openai_client = OpenAI(api_key=openai_api_key)
         self.milvus_client = MilvusClient(
-            uri=MILVUS_URI,
-            token=MILVUS_TOKEN,
+            uri=milvus_uri,
+            token=milvus_token,
         )
 
     def create_collection(

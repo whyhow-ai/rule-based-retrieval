@@ -12,7 +12,7 @@ COLLECTION_NAME = "YOUR_COLLECTION_NAME"  # take your own collection name
 
 # Initialize the ClientMilvus
 milvus_client = ClientMilvus(
-    MILVUS_URI=YOUR_MILVUS_LITE_FILE_PATH,
+    milvus_uri=YOUR_MILVUS_LITE_FILE_PATH,
     openai_api_key="<YOUR_OPEN_AI_KEY>",
 )
 

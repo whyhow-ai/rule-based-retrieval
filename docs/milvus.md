@@ -26,9 +26,9 @@ and provides a simple interface for all the RAG related tasks.
 First of all, to instantiate it one needs to provide the following
 credentials:
 
-- `MILVUS_URI`
-- `MILVUS_TOKEN` (optional)
-- `OPENAI_API_KEY`
+- `milvus_uri`
+- `milvus_token` (optional)
+- `openai_api_key`
 
 You need to create a file with the format "xxx.db" in your current directory 
 and use the file path as milvus_uri.
@@ -42,7 +42,7 @@ OPENAI_API_KEY="<YOUR_OPEN_AI_KEY>"
 
 # Initialize the ClientMilvus
 milvus_client = ClientMilvus(
-    MILVUS_URI=YOUR_MILVUS_LITE_FILE_PATH,
+    milvus_uri=YOUR_MILVUS_LITE_FILE_PATH,
     openai_api_key=OPENAI_API_KEY
 )
 ```
