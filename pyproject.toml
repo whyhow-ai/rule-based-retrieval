@@ -20,13 +20,14 @@ dependencies = [
     "pydantic>1",
     "pypdf",
     "tiktoken",
+    "pymilvus",
 ]
 dynamic = ["version"]
 
 [project.urls]
 Homepage = "https://whyhow.ai"
-Documentation = "https://whyhow-ai.github.io/rule-based-retrieval/" 
-"Issue Tracker" = "https://github.com/whyhow-ai/rule-based-retrieval/issues" 
+Documentation = "https://whyhow-ai.github.io/rule-based-retrieval/"
+"Issue Tracker" = "https://github.com/whyhow-ai/rule-based-retrieval/issues"
 
 
 [project.optional-dependencies]
@@ -104,7 +105,9 @@ warn_required_dynamic_aliases = true
 [tool.pytest.ini_options]
 filterwarnings = [
     "error",
-    "ignore::DeprecationWarning:pkg_resources.*"
+    "ignore::DeprecationWarning:pkg_resources.*",
+    "ignore::UserWarning",
+    "ignore::DeprecationWarning"
 ]
 testpaths = [
     "tests",
