@@ -1,7 +1,6 @@
 """Script that demonstrates how to use the RAG model with Milvus to implement rule-based retrieval."""
 
-# TODO
-from src.whyhow_rbr.rag_milvus import ClientMilvus, MilvusRule
+from whyhow_rbr.rag_milvus import ClientMilvus, MilvusRule
 
 # Set up your Milvus Client information
 YOUR_MILVUS_LITE_FILE_PATH = "milvus_demo.db"  # random name for milvus lite local db

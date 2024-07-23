@@ -3,8 +3,8 @@
 The `rule-based-retrieval` package helps create customized RAG pipelines. It is built on top
 of the following technologies (and their respective Python SDKs)
 
-- **OpenAI** - text generation
 - **Milvus** - vector database
+- **OpenAI** - text generation
 
 ## Initialization
 
@@ -20,7 +20,7 @@ from whyhow_rbr import ClientMilvus, MilvusRule
 
 ## ClientMilvus
 
-The central object is a `ClientMilvus`. It manages all necessary resources
+The central object is `ClientMilvus`. It manages all necessary resources
 and provides a simple interface for all the RAG related tasks.
 
 First of all, to instantiate it one needs to provide the following
@@ -30,7 +30,7 @@ credentials:
 - `MILVUS_TOKEN` (optional)
 - `OPENAI_API_KEY`
 
-You need to create a file of format "xxx.db" in your current directory 
+You need to create a file with the format "xxx.db" in your current directory 
 and use the file path as milvus_uri.
 
 Initialize the ClientMilvus like this:
@@ -38,12 +38,12 @@ Initialize the ClientMilvus like this:
 ```python
 # Set up your Milvus Client information
 YOUR_MILVUS_LITE_FILE_PATH = "./milvus_demo.db" # random name for milvus lite local db
-OPEN_AI_KEY="<YOUR_OPEN_AI_KEY>"
+OPENAI_API_KEY="<YOUR_OPEN_AI_KEY>"
 
 # Initialize the ClientMilvus
 milvus_client = ClientMilvus(
     MILVUS_URI=YOUR_MILVUS_LITE_FILE_PATH,
-    openai_api_key="<YOUR_OPEN_AI_KEY>"
+    openai_api_key=OPENAI_API_KEY
 )
 ```
 
