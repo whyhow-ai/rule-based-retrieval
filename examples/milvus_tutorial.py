@@ -3,7 +3,7 @@
 from whyhow_rbr.rag_milvus import ClientMilvus, MilvusRule
 
 # Set up your Milvus Client information
-YOUR_MILVUS_LITE_FILE_PATH = "milvus_demo.db"  # random name for milvus lite local db
+YOUR_MILVUS_LITE_FILE_PATH = "./milvus_demo.db" # local file name used by Milvus Lite to persist data
 
 
 # Define collection name
