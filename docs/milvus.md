@@ -8,6 +8,11 @@ of the following technologies (and their respective Python SDKs)
 
 ## Initialization
 
+Install package
+```shell
+pip install rule-based-retrieval
+```
+
 Please import some essential package
 ```python
 from whyhow_rbr import ClientMilvus, MilvusRule
@@ -21,8 +26,9 @@ and provides a simple interface for all the RAG related tasks.
 First of all, to instantiate it one needs to provide the following
 credentials:
 
+- `MILVUS_URI`
+- `MILVUS_TOKEN` (optional)
 - `OPENAI_API_KEY`
-- `MILVUS_URI_KEY`
 
 You need to create a file of format "xxx.db" in your current directory 
 and use the file path as milvus_uri.
@@ -31,12 +37,12 @@ Initialize the ClientMilvus like this:
 
 ```python
 # Set up your Milvus Client information
-YOUR_MILVUS_LITE_FILE_PATH = "milvus_demo.db" # random name for milvus lite local db
+YOUR_MILVUS_LITE_FILE_PATH = "./milvus_demo.db" # random name for milvus lite local db
 OPEN_AI_KEY="<YOUR_OPEN_AI_KEY>"
 
 # Initialize the ClientMilvus
 milvus_client = ClientMilvus(
-    milvus_uri_key=YOUR_MILVUS_LITE_FILE_PATH,
+    MILVUS_URI=YOUR_MILVUS_LITE_FILE_PATH,
     openai_api_key="<YOUR_OPEN_AI_KEY>"
 )
 ```
@@ -54,7 +60,7 @@ COLLECTION_NAME="YOUR_COLLECTION_NAME" # take your own collection name
 DIMENSION=1536 # decide by the model you use
 
 # Create Collection
-milvus_client.create_collection(collection_name=COLLECTION_NAME)
+milvus_client.create_collection(collection_name=COLLECTION_NAME, dimension=DIMENSION)
 ```
 
 ## Uploading documents

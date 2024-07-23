@@ -20,7 +20,7 @@ dependencies = [
     "pydantic>1",
     "pypdf",
     "tiktoken",
-    "pymilvus"
+    "pymilvus>=2.4.4"
 ]
 dynamic = ["version"]
 

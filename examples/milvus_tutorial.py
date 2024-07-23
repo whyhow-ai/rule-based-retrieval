@@ -1,19 +1,19 @@
 """Script that demonstrates how to use the RAG model with Milvus to implement rule-based retrieval."""
 
-from whyhow_rbr import ClientMilvus, MilvusRule
+# TODO
+from src.whyhow_rbr.rag_milvus import ClientMilvus, MilvusRule
 
 # Set up your Milvus Client information
-YOUR_MILVUS_LITE_FILE_PATH = (
-    "milvus_demo.db"  # random name for milvus lite local db
-)
+YOUR_MILVUS_LITE_FILE_PATH = "milvus_demo.db"  # random name for milvus lite local db
 
 
 # Define collection name
 COLLECTION_NAME = "YOUR_COLLECTION_NAME"  # take your own collection name
 
+
 # Initialize the ClientMilvus
 milvus_client = ClientMilvus(
-    milvus_uri_key=YOUR_MILVUS_LITE_FILE_PATH,
+    MILVUS_URI=YOUR_MILVUS_LITE_FILE_PATH,
     openai_api_key="<YOUR_OPEN_AI_KEY>",
 )
 
@@ -25,6 +25,7 @@ milvus_client.create_collection(collection_name=COLLECTION_NAME)
 # Uploading the PDF document
 # get pdfs from data directory in current directory
 pdfs = ["data/1.pdf", "data/2.pdf"]  # replace to your pdfs path
+
 
 milvus_client.upload_documents(documents=pdfs)
 
