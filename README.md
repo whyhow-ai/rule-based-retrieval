@@ -15,7 +15,7 @@ The Rule-based Retrieval package is a Python package that enables you to create 
 
 - Python 3.10 or higher
 - OpenAI API key
-- Pinecone or Milvus API key
+- Pinecone, Milvus or Qdrant credentials
 
 ### Install from PyPI
 
@@ -87,6 +87,7 @@ Check out the `examples/` directory for sample scripts demonstrating how to use 
 
 - [Milvus](docs/milvus.md) 
 - [Pinecone](docs/pinecone.md)
+- [Qdrant](docs/qdrant.md)
 
 # Contributing
 
