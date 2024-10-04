@@ -27,7 +27,7 @@ def generate_embeddings(
         List of embeddings for each chunk.
 
     """
-    embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key, model=model)  # type: ignore[call-arg]
+    embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key, model=model)  # type: ignore
     embeddings_array = embeddings.embed_documents(chunks)
 
     return embeddings_array
